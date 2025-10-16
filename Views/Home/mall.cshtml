@@ -1,0 +1,68 @@
+@model ASPNET.Controllers.MallViewModel
+
+@{
+    ViewData["Title"] = "Maliketh Mall";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="container mt-4">
+
+    <!-- Sản phẩm giảm giá -->
+    <h2 class="text-primary mb-3">🔥 Sản phẩm giảm giá</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+        @foreach (var item in Model.SPList)
+        {
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <div class="card-header text-danger fw-bold">🔥 Giảm giá</div>
+                    <img src="@item.url_sanpham" class="card-img-top p-2" style="height:200px; object-fit:contain" />
+                    <div class="card-body">
+                        <h5 class="card-title">@item.ten_sanpham</h5>
+                        <p class="text-muted text-decoration-line-through">250.000 ₫</p>
+                        <p class="text-danger fw-bold">@item.gia_ban.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</p>
+                        <a href="/Product/Details/@item.sanpham_id" class="btn btn-danger w-100">Mua ngay</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Sản phẩm bán chạy -->
+    <h2 class="text-warning mt-5 mb-3 text-center">🏆 Sản phẩm bán chạy</h2>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3">
+        @foreach (var item in Model.BestsellerList)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="@item.url_sanpham" class="card-img-top" style="height:150px; object-fit:cover" />
+                    <div class="card-body text-center">
+                        <h6 class="card-title text-truncate">@item.ten_sanpham</h6>
+                        <p class="text-danger fw-bold">@item.gia_ban.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</p>
+                        <a href="/Product/Details/@item.sanpham_id" class="btn btn-warning w-100">Mua ngay</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Sản phẩm gợi ý -->
+    <h2 class="text-primary mt-5 mb-3">💕 Sản phẩm gợi ý</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+        @foreach (var item in Model.RandomList)
+        {
+            <div class="col">
+                <div class="card h-100 text-center">
+                    <div class="card-header text-pink fw-bold">💖 Gợi ý</div>
+                    <img src="@item.url_sanpham" class="card-img-top p-2" style="height:200px; object-fit:contain" />
+                    <div class="card-body">
+                        <h5 class="card-title">@item.ten_sanpham</h5>
+                        <p class="text-danger fw-bold">@item.gia_ban.ToString("C0", System.Globalization.CultureInfo.GetCultureInfo("vi-VN"))</p>
+                        <a href="/Product/Details/@item.sanpham_id" class="btn btn-danger w-100">Mua ngay</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

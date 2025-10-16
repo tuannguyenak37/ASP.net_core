@@ -94,3 +94,7 @@ D:\ASPNETMCV\ASPNET\obj\Debug\net9.0\refint\ASPNET.dll
 D:\ASPNETMCV\ASPNET\obj\Debug\net9.0\ASPNET.pdb
 D:\ASPNETMCV\ASPNET\obj\Debug\net9.0\ASPNET.genruntimeconfig.cache
 D:\ASPNETMCV\ASPNET\obj\Debug\net9.0\ref\ASPNET.dll
+D:\ASPNETMCV\ASPNET\bin\Debug\net9.0\Newtonsoft.Json.dll
+D:\ASPNETMCV\ASPNET\obj\Debug\net9.0\ASPNET.csproj.AssemblyReference.cache
+D:\ASPNETMCV\ASPNET\obj\Debug\net9.0\ASPNET.sourcelink.json
+D:\ASPNETMCV\ASPNET\obj\Debug\net9.0\ASPNET.csproj.Up2Date
