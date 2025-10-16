@@ -1,10 +1,17 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "DxFzuv57XH8=",
   "success": true,
   "projectFilePath": "D:\\ASPNETMCV\\ASPNET\\ASPNET.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Maliketh\\.nuget\\packages\\newtonsoft.json\\13.0.4\\newtonsoft.json.13.0.4.nupkg.sha512"
   ],
+=======
+  "dgSpecHash": "BuWmBMEJVkg=",
+  "success": true,
+  "projectFilePath": "D:\\appAPI\\ASP.net_core\\ASPNET.csproj",
+  "expectedPackageFiles": [],
+>>>>>>> 65525aa002c49f1570a22ec31287b11b5ad07f70
   "logs": []
 }
