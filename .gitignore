@@ -1,4 +1,4 @@
-# Build Folders
+# Build output
 bin/
 obj/
 
@@ -24,7 +24,7 @@ Thumbs.db
 *.staticwebassets.runtime.json
 *.staticwebassets.endpoints.json
 
-# App Settings
+# App Settings (development only)
 appsettings.Development.json
 
 # Logs
@@ -34,13 +34,5 @@ appsettings.Development.json
 *.nupkg
 packages/
 
-# Others
+# IDE/Editor
 .vscode/
-obj/Debug/net9.0/rjsmrazor.dswa.cache.json
-obj/Debug/net9.0/rjsmrazor.dswa.cache.json
-obj/Debug/net9.0/rpswa.dswa.cache.json
-obj/Debug/net9.0/staticwebassets.build.endpoints.json
-obj/Debug/net9.0/staticwebassets.build.json
-obj/Debug/net9.0/staticwebassets.build.json.cache
-obj/Debug/net9.0/staticwebassets.development.json
-obj/project.assets.json
