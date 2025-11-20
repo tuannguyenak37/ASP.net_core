@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Dashboard</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        #wrapper {
+            display: flex;
+            width: 100%;
+        }
+        #sidebar-wrapper {
+            min-width: 220px;
+            max-width: 220px;
+            background-color: #f8f9fa;
+        }
+        #page-content-wrapper {
+            width: 100%;
+            padding: 20px;
+        }
+        .sidebar-heading {
+            padding: 1rem;
+            font-weight: bold;
+        }
+        .list-group-item {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="border-end" id="sidebar-wrapper">
+            <div class="sidebar-heading border-bottom">Admin Dashboard</div>
+            <div class="list-group list-group-flush">
+                <a class="list-group-item list-group-item-action" asp-controller="Admin" asp-action="Products">Sản phẩm</a>
+                <a class="list-group-item list-group-item-action" asp-controller="Admin" asp-action="Orders">Đơn hàng</a>
+                <a class="list-group-item list-group-item-action" asp-controller="Admin" asp-action="Statistics">Thống kê</a>
+            </div>
+        </div>
+
+        <!-- Page content -->
+        <div id="page-content-wrapper">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <div class="container-fluid">
+                    <span class="ms-auto">Xin chào, @Context.Session.GetString("user_first_name")</span>
+                    <a class="btn btn-outline-danger ms-3" asp-controller="Account" asp-action="Logout">Logout</a>
+                </div>
+            </nav>
+
+            <div class="container-fluid mt-3">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

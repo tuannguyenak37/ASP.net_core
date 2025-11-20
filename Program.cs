@@ -1,38 +1,59 @@
 using ASPNET.Services;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-// Đăng ký HttpClient cho ApiService với base URL chung
-builder.Services.AddHttpClient<ApiService>(client =>
-{
-    client.BaseAddress = new Uri("http://localhost:7677/api/"); // base URL chung
-});
-
-// --- Thêm Session ---
-builder.Services.AddDistributedMemoryCache(); // lưu session tạm trên RAM
+// --- Session ---
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // thời gian session
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+});
+
+
+builder.Services.AddHttpClient<ApiService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:7677/api/");
+})
+.ConfigurePrimaryHttpMessageHandler(() =>
+{
+    return new HttpClientHandler
+    {
+        UseCookies = true,
+        CookieContainer = new CookieContainer(), // ⚠️ cookie sẽ lưu tại đây
+        AllowAutoRedirect = false
+    };
+});
+
+// --- HttpClient cho ApiSanPhamService ---
+builder.Services.AddHttpClient<ApiSanPhamService>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:7677/api/");
+})
+.ConfigurePrimaryHttpMessageHandler(() =>
+{
+    return new HttpClientHandler
+    {
+        UseCookies = true,
+        CookieContainer = new CookieContainer(),
+        AllowAutoRedirect = false
+    };
 });
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
-// --- bật Session ---
 app.UseSession();
-
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}"); // <-- Home/Index là mặc định
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

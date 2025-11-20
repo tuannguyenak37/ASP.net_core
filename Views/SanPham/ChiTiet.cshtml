@@ -1,0 +1,162 @@
+@using Newtonsoft.Json.Linq
+@model JObject
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+    var sp = Model;
+}
+
+<div class="container my-5">
+    <div class="row g-4 align-items-start">
+        <!-- Hình ảnh -->
+        <div class="col-md-5">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                <img src="@sp["url_sanpham"]" alt="@Html.Raw(sp["ten_sanpham"])" 
+                     class="img-fluid" style="object-fit: cover; height: 350px;">
+            </div>
+        </div>
+
+        <!-- Thông tin sản phẩm -->
+        <div class="col-md-7">
+            <h2 class="fw-bold text-dark mb-2">@Html.Raw(sp["ten_sanpham"])</h2>
+            <p class="text-muted mb-3">@Html.Raw(sp["mo_ta_sanpham"])</p>
+
+            <h4 class="text-danger fw-bold mb-3">
+                @string.Format("{0:N0} VNĐ", sp["gia_ban"]?.ToObject<int>() ?? 0)
+            </h4>
+
+            <p><strong>Tồn kho:</strong> @sp["tong_so_luong_ton"] sản phẩm</p>
+
+            <div class="d-flex align-items-center gap-3 mt-3">
+                <label class="fw-semibold">Số lượng:</label>
+                <div class="input-group" style="width: 130px;">
+                    <button class="btn btn-outline-secondary" id="btnMinus">-</button>
+                    <input type="number" id="soLuong" class="form-control text-center" value="1" min="1">
+                    <button class="btn btn-outline-secondary" id="btnPlus">+</button>
+                </div>
+            </div>
+
+            <button id="btnAddToCart" class="btn btn-primary btn-lg mt-4 px-4">
+                <i class="bi bi-cart-plus"></i> Thêm vào giỏ hàng
+            </button>
+        </div>
+    </div>
+
+    <hr class="my-5" />
+
+    <!-- Thông tin shop -->
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+        <div class="d-flex align-items-center">
+            <img src="@sp["url_shop"]" alt="@Html.Raw(sp["ten_shop"])" 
+                 class="rounded-circle me-3" width="70" height="70"
+                 style="object-fit: cover;">
+            <div>
+                <h5 class="mb-1">@Html.Raw(sp["ten_shop"])</h5>
+                <p class="mb-0 text-muted">@Html.Raw(sp["mo_ta_shop"])</p>
+                <small class="text-secondary">
+                    <i class="bi bi-geo-alt"></i> @Html.Raw(sp["dia_chi_shop"])
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast thông báo -->
+<div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100;"></div>
+
+@section Scripts {
+    <script>
+        const sp = @Html.Raw(sp.ToString());
+
+        // Nút + -
+        document.getElementById("btnPlus").addEventListener("click", () => {
+            let input = document.getElementById("soLuong");
+            input.value = parseInt(input.value) + 1;
+        });
+
+        document.getElementById("btnMinus").addEventListener("click", () => {
+            let input = document.getElementById("soLuong");
+            if (parseInt(input.value) > 1)
+                input.value = parseInt(input.value) - 1;
+        });
+
+        // Nút thêm vào giỏ hàng
+        document.getElementById("btnAddToCart").addEventListener("click", () => {
+            let soLuong = parseInt(document.getElementById("soLuong").value);
+            let gioHang = JSON.parse(localStorage.getItem("gioHang")) || [];
+
+            const sanPham = {
+                sanpham_id: sp.sanpham_id,
+                ten_sanpham: sp.ten_sanpham,
+                gia_ban: sp.gia_ban,
+                mo_ta_sanpham: sp.mo_ta_sanpham,
+                url_sanpham: sp.url_sanpham,
+                loai_sanpham: sp.loai_sanpham,
+                shop_id: sp.shop_id,
+                user_id: sp.user_id,
+                ten_shop: sp.ten_shop,
+                mo_ta_shop: sp.mo_ta_shop,
+                the_loai: sp.the_loai,
+                ngay_tao: sp.ngay_tao,
+                url_shop: sp.url_shop,
+                dia_chi_shop: sp.dia_chi_shop,
+                tong_so_luong_ton: sp.tong_so_luong_ton,
+                so_luong: soLuong,
+                selected: false
+            };
+
+            // Kiểm tra nếu sản phẩm đã có trong giỏ
+            let index = gioHang.findIndex(p => p.sanpham_id === sp.sanpham_id);
+            if (index > -1) {
+                gioHang[index].so_luong += soLuong;
+            } else {
+                gioHang.push(sanPham);
+            }
+
+            localStorage.setItem("gioHang", JSON.stringify(gioHang));
+            showToast("✅ Đã thêm vào giỏ hàng!");
+        });
+
+        // Hiển thị Toast
+        function showToast(message) {
+            const container = document.getElementById("toastContainer");
+            const toast = document.createElement("div");
+            toast.className = "toast align-items-center text-white bg-success border-0 show";
+            toast.role = "alert";
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">${message}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove("show");
+                setTimeout(() => toast.remove(), 500);
+            }, 2000);
+        }
+    </script>
+}
+
+<style>
+    .btn-primary {
+        background-color: #ff7b00;
+        border-color: #ff7b00;
+        transition: 0.3s;
+    }
+    .btn-primary:hover {
+        background-color: #ff9100;
+        border-color: #ff9100;
+        transform: scale(1.05);
+    }
+    .toast {
+        animation: slideIn 0.5s ease, fadeOut 0.5s ease 2s forwards;
+    }
+    @@keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    @@keyframes fadeOut {
+        to { opacity: 0; transform: translateX(100%); }
+    }
+</style>

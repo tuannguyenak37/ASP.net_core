@@ -1,0 +1,80 @@
+@model List<Newtonsoft.Json.Linq.JToken>
+
+<div class="container py-4">
+    <h4 class="mb-4 fw-bold text-center text-primary">🎉 Sản Phẩm Giảm Giá</h4>
+    <div class="row g-4">
+        @foreach (var sp in Model)
+        {
+            var sanPhamId = sp["sanpham_id"]?.ToString();
+            var tenSanPham = sp["ten_sanpham"]?.ToString();
+            var giaBan = sp["gia_ban"]?.ToObject<int>() ?? 0;
+            var urlAnh = sp["url_sanpham"]?.ToString();
+            var phanTramGiam = sp["giam_gia"]?.ToObject<int>() ?? 20; // mặc định giảm 20%
+            var giaSauGiam = giaBan * (100 - phanTramGiam) / 100;
+
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card h-100 shadow-sm border-0 rounded-3 position-relative product-card">
+                    <!-- Huy hiệu giảm giá -->
+                    <span class="badge bg-danger position-absolute top-0 start-0 m-2 px-2 py-1 rounded-2">
+                        -@phanTramGiam%
+                    </span>
+
+                    <!-- Hình ảnh sản phẩm -->
+                    <div class="overflow-hidden rounded-top-3">
+                        <img src="@urlAnh" alt="@tenSanPham" class="card-img-top img-fluid"
+                             style="height:200px; object-fit:cover; transition: transform 0.3s ease;">
+                    </div>
+
+                    <!-- Nội dung sản phẩm -->
+                    <div class="card-body text-center">
+                        <h6 class="card-title fw-semibold text-dark text-truncate" title="@tenSanPham">
+                            @tenSanPham
+                        </h6>
+
+                        <p class="card-text mb-1">
+                            <span class="text-decoration-line-through text-muted small">
+                                @string.Format("{0:N0} VNĐ", giaBan)
+                            </span>
+                        </p>
+                        <p class="text-danger fw-bold fs-6">
+                            @string.Format("{0:N0} VNĐ", giaSauGiam)
+                        </p>
+
+                        <!-- Nút chức năng -->
+                        <div class="d-flex justify-content-center gap-2 mt-2">
+                            
+
+                            <a href="@Url.Action("ChiTiet", "SanPham", new { id = sanPhamId })"
+                               class="btn btn-outline-secondary btn-sm px-3">
+                                <i class="bi bi-info-circle"></i> Xem chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .product-card:hover img {
+        transform: scale(1.05);
+    }
+
+    .product-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+
+    .badge {
+        font-size: 0.85rem;
+    }
+
+    .btn i {
+        vertical-align: middle;
+    }
+</style>

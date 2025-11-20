@@ -1,5 +1,76 @@
-﻿@{
+﻿@model ASPNET.Models.HomeViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 @await Html.PartialAsync("Banner")
+
+<h2 class="mt-4 mb-3">Sản phẩm thông dụng</h2>
+
+@await Html.PartialAsync("_SanPhamTopPartial", Model.SanPhams)
+
+<h2 class="text-center fw-bold text-warning mb-4">
+    🔥 Sản Phẩm Bán Chạy Nhất
+</h2>
+
+<div class="row g-4">
+    @foreach (var sp in Model.BestSellers)
+    {
+        var sanPhamId = sp["sanpham_id"]?.ToString();  // ✅ Lấy ID
+        var tenSanPham = sp["ten_sanpham"]?.ToString();
+        var giaBan = sp["gia_ban"]?.ToObject<int>() ?? 0;
+        var urlAnh = sp["url_sanpham"]?.ToString();
+        var soLuongBan = sp["tong_so_luong_ban"]?.ToObject<int>() ?? 0;
+
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm border-0 rounded-3 best-seller-card position-relative">
+                <!-- Badge "Best Seller" -->
+                <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 px-3 py-2 rounded-2 fw-semibold">
+                    🏆 Best Seller
+                </span>
+
+                <!-- Hình ảnh sản phẩm -->
+                <div class="overflow-hidden rounded-top-3">
+                    <img src="@urlAnh" alt="@tenSanPham"
+                         class="card-img-top img-fluid"
+                         style="height: 200px; object-fit: cover; transition: transform 0.3s ease;">
+                </div>
+
+                <div class="card-body text-center">
+                    <h6 class="card-title fw-semibold text-dark text-truncate" title="@tenSanPham">
+                        @tenSanPham
+                    </h6>
+                    <p class="text-danger fw-bold mb-1">
+                        @string.Format("{0:N0} ₫", giaBan)
+                    </p>
+                    <p class="text-muted small mb-0">
+                        Đã bán: <span class="fw-semibold">@soLuongBan</span>
+                    </p>
+
+                    <div class="d-flex justify-content-center gap-2 mt-2">
+                        <a href="@Url.Action("ChiTiet", "SanPham", new { id = sanPhamId })"
+                           class="btn btn-outline-secondary btn-sm px-3">
+                            <i class="bi bi-info-circle"></i> Xem chi tiết
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .best-seller-card:hover img {
+        transform: scale(1.08);
+    }
+
+    .best-seller-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .best-seller-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+    }
+</style>

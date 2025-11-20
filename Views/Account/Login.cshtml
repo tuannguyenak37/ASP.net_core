@@ -23,6 +23,8 @@
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Login</button>
                     </form>
+
+                    @* Hiển thị API Response nếu có *@
                     @if(ViewBag.Result != null)
                     {
                         <div class="alert alert-info mt-3">
@@ -30,6 +32,10 @@
                             <pre>@ViewBag.Result</pre>
                         </div>
                     }
+
+                    <div class="mt-3 text-center">
+                        <a href="/Account/Register">Bạn chưa có tài khoản? Đăng ký</a>
+                    </div>
                 </div>
             </div>
         </div>

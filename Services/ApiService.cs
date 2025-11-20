@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System;
 
 namespace ASPNET.Services
 {
@@ -15,32 +16,54 @@ namespace ASPNET.Services
             // Ví dụ: _httpClient.BaseAddress = new Uri("http://localhost:7677/api/");
         }
 
-        // Gọi API với endpoint bất kỳ, method POST, data JSON
+        // POST bất kỳ endpoint với payload JSON
         public async Task<string> PostAsync(string endpoint, object data)
         {
-            var json = JsonConvert.SerializeObject(data);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            try
+            {
+                var json = JsonConvert.SerializeObject(data);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync(endpoint, content);
-            response.EnsureSuccessStatusCode();
+                var response = await _httpClient.PostAsync(endpoint, content);
 
-            return await response.Content.ReadAsStringAsync();
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                // Log nếu backend trả lỗi
+                if (!response.IsSuccessStatusCode)
+                    Console.WriteLine($"⚠ API trả lỗi {response.StatusCode}: {responseBody}");
+
+                return responseBody;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ Lỗi gọi API: " + ex);
+                throw;
+            }
         }
 
-        // Gọi API với GET, optional query string
+        // GET bất kỳ endpoint
         public async Task<string> GetAsync(string endpoint)
         {
-            var response = await _httpClient.GetAsync(endpoint);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                var response = await _httpClient.GetAsync(endpoint);
+                string responseBody = await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode)
+                    Console.WriteLine($"⚠ API trả lỗi {response.StatusCode}: {responseBody}");
 
-            return await response.Content.ReadAsStringAsync();
+                return responseBody;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ Lỗi gọi API GET: " + ex);
+                throw;
+            }
         }
 
-        // --- Thêm phương thức Login riêng để dễ sử dụng ---
+        // Login riêng
         public async Task<string> LoginAsync(string username, string password)
         {
             var data = new { user_name = username, password = password };
-            // Endpoint "Login" sẽ nối với BaseAddress nếu đã set
             return await PostAsync("Login", data);
         }
     }
